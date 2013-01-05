@@ -1317,6 +1317,9 @@ class exports.Assign extends Node
 
   compileNode: (o) ->
     return @compileSplice o if @left instanceof Slice and @op is \=
+    if @left instanceof Chain
+    and @left.tails?[*-1] instanceof Call
+      return @compileFunctionAssign o
     left = @left.expandSlice(o, true)unwrap!
     unless @right
       left.isAssignable! or left.carp 'invalid unary assign'
@@ -1416,6 +1419,15 @@ class exports.Assign extends Node
         .add Call [@left.target, (Chain Arr [from-exp-node, to-exp]
                         .add Index (Key \concat), \. true .add Call [right-node])]; right]
       .compile o, LEVEL_LIST
+
+  compileFunctionAssign: (o) ->
+    params = @left.tails[*-1].args
+    Assign do
+      Chain @left.head, (@left.tails.slice 0, -1)
+      Fun params, (Block @right), true, params.length > 1
+      @op
+      @logic
+    .compile o
 
   rendArr: (o, nodes, rite) ->
     for node, i in nodes

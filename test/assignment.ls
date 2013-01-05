@@ -46,7 +46,7 @@ val ?= 'eulav'
 eq val, 'value'
 
 
-for nonref, i in <[ 0 f() this true ]>
+for nonref, i in <[ 0 this true ]>
   throws 'invalid assign on line ' + (i+1), ->
     x = if i then nonref else \... + nonref
     LiveScript.compile \\n * i + "[#{x}, y] = z"
@@ -86,7 +86,6 @@ lala ::= other: true
 ok lala::other
 ok fafa.other
 
-compileThrows 'invalid assign'    1 'f() ?=x'
 compileThrows 'invalid accessign' 1 'f()?= x'
 
 

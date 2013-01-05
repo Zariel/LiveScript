@@ -714,5 +714,47 @@ l.call obj, 'hello'
 eq true obj.x
 
 
+# assign to func syntax
+f(x) = x * x
+eq 4 f 2
+
+g(x, y) = x + y
+eq 7 g 3 4
+
+add-four = g 4
+eq 9 add-four 5
+
+h(x = 2, y = 3) = x * y
+eq 20 h 4 5
+eq 6 h!
+
+k = h 7
+eq 14 k 2
+eq 21 k!
+
+obj =
+  x: 10
+  f: (y) ->
+    g(x) = @x * x
+    g y
+eq 20 obj.f 2
+
+obj.g(x) = x + 1
+eq 6 obj.g 5
+
+obj.g.h(x) = x + 2
+eq 7 obj.g.h 5
+
+f = 2
+f(x) ?= x
+eq 2 f
+
+let
+  f = 10
+  let
+    f(x) := x * x
+  eq 4 f 2
+
+
 ## util funcs
 function map f, xs then [f x for x in xs]

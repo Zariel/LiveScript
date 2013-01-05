@@ -500,27 +500,6 @@ exports import
           | otherwise => \BIOP
       @lpar = @parens.pop! if \) is tag = val = @pair val
     case <[ = : ]>
-      # change id@! to calls (id! already makes calls)
-      if @last.0 is \UNARY and @last.1 is \! and @tokens[*-2].1 in [\.@ \this]
-        @tokens.pop!
-        @token \CALL( \(
-        @token \)CALL \)
-      else if @last.0 is \)CALL
-        console?warn "WARNING on line #{ @line }: `func(x) = ...` type functions are deprecated and will be removed in a future LiveScript release. Please use long arrows --> for your curried functions instead."
-        tag = \ASSIGN if val is \=
-        arrow = \-->
-        @tokens.pop! # remove the )CALL
-        @token \)PARAM \) # add )PARAM
-        for t, i in @tokens by -1 when t.0 is \CALL( then break # find opening CALL
-        # remove opening call, replace with assign and param
-        @tokens.splice i, 1, [tag, val, @line], [\PARAM( \( @line]
-        if @tokens[i-2]?1 in [\.~ \~]
-          @tokens.splice i-2, 1; --i # remove the ~
-          if able @tokens.slice 0, i - 1
-            @tokens.splice i-2 + 1, 0, [\DOT \. @line]; ++i
-          arrow = \~~>
-        @token \-> arrow
-        return sym.length
       if val is \:
         switch @last.0
         | \ID \STRNUM \) => break
