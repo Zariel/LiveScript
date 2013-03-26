@@ -742,8 +742,6 @@ ok (x! xor y!)
 
 ok (x 0 xor y!)
 
-eq 'moo' (0 xor 'moo')
-
 ### Regex overloaded ==
 if /[aeuio]*/ == 'ee'
 then eq 'ee' that.0
