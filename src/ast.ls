@@ -1285,11 +1285,7 @@ class exports.Binary extends Node
     r = Chain Var (util \deepEq) .add Call [@first, @second, Literal "'#{@op}'"]
     (if negate then Unary \! r else r).compile o
 
-  compileXor: (o) ->
-    left  = Chain @first  .cacheReference o
-    right = Chain @second .cacheReference o
-    Binary \&& (Binary \!== (Unary \! left.0), (Unary \! right.0))
-             , (Parens Binary \|| left.1, right.1) .compile o
+  compileXor: (o) -> "#{@first.compile o} ^ #{@second.compile o}"
 
 #### Assign
 # Assignment to a variable/property.
